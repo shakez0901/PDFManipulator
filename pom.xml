@@ -3,28 +3,57 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <build>
+        <plugins>
+            <plugin>
+                <!-- Build an executable JAR -->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>Main</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <groupId>groupId</groupId>
     <artifactId>PePDF</artifactId>
     <version>1.0-SNAPSHOT</version>
     <properties>
-  <maven.compiler.source>1.8</maven.compiler.source>
-  <maven.compiler.target>1.8</maven.compiler.target>
-</properties>
-<dependencies>
-    <dependency>
-        <groupId>org.imgscalr</groupId>
-        <artifactId>imgscalr-lib</artifactId>
-        <version>4.2</version>
-    </dependency>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+    <dependencies>
+        <dependency>
+            <groupId>org.imgscalr</groupId>
+            <artifactId>imgscalr-lib</artifactId>
+            <version>4.2</version>
+        </dependency>
 
- <dependency>
-  <groupId>org.apache.pdfbox</groupId>
-  <artifactId>pdfbox-examples</artifactId>
-  <version>2.0.21</version>
-</dependency>
+        <dependency>
+            <groupId>org.apache.pdfbox</groupId>
+            <artifactId>pdfbox-examples</artifactId>
+            <version>2.0.21</version>
+        </dependency>
 
-    <!-- JavaFx -->
+        <!-- JavaFx -->
+        <!-- https://mvnrepository.com/artifact/org.openjfx/javafx -->
+        <!-- https://mvnrepository.com/artifact/org.openjfx/javafx -->
+        <dependency>
+            <groupId>org.openjfx</groupId>
+            <artifactId>javafx</artifactId>
+            <version>17.0.0.1</version>
+            <type>pom</type>
+        </dependency>
+
+
         <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-base</artifactId>
@@ -39,7 +68,7 @@
 
         <dependency>
             <groupId>org.openjfx</groupId>
-            <artifactId>javafx-graphics </artifactId>
+            <artifactId>javafx-graphics</artifactId>
             <version>12</version>
             <classifier>win</classifier>
         </dependency>
@@ -62,13 +91,19 @@
             <version>12</version>
         </dependency>
 
-         <dependency>
+        <dependency>
             <groupId>org.openjfx</groupId>
             <artifactId>javafx-swing</artifactId>
             <version>12</version>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.11.0</version>
+        </dependency>
 
-</dependencies>
+    </dependencies>
 
 
 </project>

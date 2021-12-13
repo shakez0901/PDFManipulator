@@ -11,8 +11,9 @@
     </content>
     <orderEntry type="jdk" jdkName="15" jdkType="JavaSDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="lib" level="project" />
-    <orderEntry type="library" name="commons-io-2.8" level="project" />
+    <orderEntry type="library" name="bin" level="project" />
+    <orderEntry type="library" name="lib" level="application" />
+    <orderEntry type="library" name="javafx" level="application" />
     <orderEntry type="library" name="Maven: org.imgscalr:imgscalr-lib:4.2" level="project" />
     <orderEntry type="library" name="Maven: org.apache.pdfbox:pdfbox-examples:2.0.21" level="project" />
     <orderEntry type="library" name="Maven: org.apache.pdfbox:pdfbox-tools:2.0.21" level="project" />
@@ -39,6 +40,6 @@
     <orderEntry type="library" name="Maven: org.openjfx:javafx-media:win:12" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-swing:12" level="project" />
     <orderEntry type="library" name="Maven: org.openjfx:javafx-swing:win:12" level="project" />
-    <orderEntry type="library" name="bin" level="project" />
+    <orderEntry type="library" name="Maven: commons-io:commons-io:2.11.0" level="project" />
   </component>
 </module>

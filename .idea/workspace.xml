@@ -2,12 +2,35 @@
 <project version="4">
   <component name="ArtifactsWorkspaceSettings">
     <artifacts-to-build>
-      <artifact name="PDFManipulator1111:jar" />
+      <artifact name="PDFManipulator1:jar" />
     </artifacts-to-build>
   </component>
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
   <component name="ChangeListManager">
-    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="" />
-    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <list default="true" id="cdb932d9-7e58-4d94-93a9-e7b232ef17da" name="Default" comment="fix launch issue">
+      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_io_commons_io_2_11_0.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/PDFManipulator1.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/artifacts/PDFManipulator1111_jar.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/artifacts/PDFManipulator1_jar.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/commons_io_2_8.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/lib.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/PDFManipulator1.iml" beforeDir="false" afterPath="$PROJECT_DIR$/PDFManipulator1.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/PDFManipulator1111_jar/PDFManipulator1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/PDFManipulator1_jar/PDFManipulator1.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/PDFManipulator1_jar/PDFManipulator1.jar" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/artifacts/PDFManipulator1_jar2/PDFManipulator1.jar" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/META-INF/MANIFEST.MF" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sample/Controller.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sample/Controller.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sample/Launcher.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sample/Launcher.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/sample/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/sample/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Controller.class" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/sample/Launcher.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/sample/Launcher.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/sample/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/sample/Main.class" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -69,17 +92,21 @@
       <setting name="OPEN_NEW_TAB" value="false" />
     </FindUsagesManager>
   </component>
-  <component name="MavenImportPreferences">
-    <option name="importingSettings">
-      <MavenImportingSettings>
-        <option name="importAutomatically" value="true" />
-      </MavenImportingSettings>
-    </option>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
   </component>
   <component name="PhpWorkspaceProjectConfiguration" backward_compatibility_performed="true" />
   <component name="ProjectId" id="1lmXsHxxqSwOh3oI5FK9qVt0iML" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectReloadState">
     <option name="STATE" value="0" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
   </component>
   <component name="PropertiesComponent">
     <property name="GenerateAntBuildDialog.backupFiles" value="true" />
@@ -93,30 +120,27 @@
     <property name="MemberChooser.showClasses" value="true" />
     <property name="MemberChooser.sorted" value="false" />
     <property name="OverrideImplement.combined" value="false" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
     <property name="dynamic.classpath" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../../../javafx-sdk-17.0.0.1/bin" />
+    <property name="extract.method.default.visibility" value="private" />
+    <property name="last_opened_file_path" value="$USER_HOME$/Desktop/javafx-sdk-17.0.1/lib/javafx.web.jar" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Artifacts" />
     <property name="project.structure.proportion" value="0.1484375" />
     <property name="project.structure.side.proportion" value="0.2" />
-    <property name="recentsLimit" value="5" />
     <property name="settings.editor.selected.configurable" value="JavaScript.Libraries" />
   </component>
-  <component name="RunDashboard">
-    <option name="ruleStates">
-      <list>
-        <RuleState>
-          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
-        </RuleState>
-        <RuleState>
-          <option name="name" value="StatusDashboardGroupingRule" />
-        </RuleState>
-      </list>
-    </option>
-  </component>
   <component name="RunManager">
+    <configuration default="true" type="Applet">
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration default="true" type="DartUnitRunConfigurationType" factoryName="DartUnit">
       <option name="VMOptions" />
       <option name="arguments" />
@@ -129,16 +153,10 @@
       <Host>localhost</Host>
       <Port>5050</Port>
     </configuration>
-    <configuration default="true" type="Applet">
-      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="Main" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="sample.Main" />
       <module name="PDFManipulator1" />
-      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="VM_PARAMETERS" value="--module-path=&quot;C:\Users\robin\Desktop\javafx-sdk-17.0.1\lib&quot; --add-modules=javafx.controls" />
       <extension name="coverage">
         <pattern>
           <option name="PATTERN" value="sample.*" />
@@ -189,6 +207,7 @@
       </method>
     </configuration>
   </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="SvnConfiguration">
     <configuration />
   </component>
@@ -209,14 +228,28 @@
       <workItem from="1634634228662" duration="1372000" />
       <workItem from="1634635869633" duration="2851000" />
       <workItem from="1639402945809" duration="189000" />
+      <workItem from="1639409325386" duration="4426000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
-    <option name="version" value="1" />
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
   <component name="VcsManagerConfiguration">
     <option name="OFFER_MOVE_TO_ANOTHER_CHANGELIST_ON_PARTIAL_COMMIT" value="true" />
     <option name="INCLUDE_TEXT_INTO_SHELF" value="false" />
+    <MESSAGE value="fix launch issue" />
+    <option name="LAST_COMMIT_MESSAGE" value="fix launch issue" />
   </component>
 </project>
