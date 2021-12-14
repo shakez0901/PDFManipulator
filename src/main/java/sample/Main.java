@@ -37,6 +37,7 @@ public class Main extends Application {
     private TextField scaleTextField, currentPageField;
     private Label totalPagesLabel;
     private FileChooser fileChooser;
+    private File lastPath;
 
     private boolean isOpen = false;
 
@@ -271,7 +272,7 @@ public class Main extends Application {
 
         File file = fileChooser.showOpenDialog(window);
         if (file != null) {
-            System.out.println("called open");
+            lastPath = file.getParentFile(); //remember path of the opened file
             currentPage = 0;
             String ext = FilenameUtils.getExtension(file.getName());
 
@@ -300,13 +301,13 @@ public class Main extends Application {
         if (!isOpen) {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Open file first", ButtonType.OK);
             alert.showAndWait();
-//			JOptionPane.showMessageDialog(null, "Open file first", "Error", JOptionPane.ERROR_MESSAGE);
         } else {
             try {
                 fileChooser.setTitle("Save as");
+                fileChooser.setInitialDirectory(lastPath);
                 File saveAs = fileChooser.showSaveDialog(window);
                 if (saveAs != null) {
-                    document.save(saveAs + ".pdf");
+                    document.save(saveAs);
                 }
 
 
