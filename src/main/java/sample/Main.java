@@ -3,16 +3,21 @@ package sample;
 import javafx.application.Application;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
-import javafx.scene.control.*;
+// import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import com.sun.javafx.scene.control.skin.Utils;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.commons.io.FilenameUtils;
@@ -35,15 +40,23 @@ public class Main extends Application {
 
     private TilePane previewPane;
     private TextField scaleTextField, currentPageField;
+    private int currentPage;
     private Label totalPagesLabel;
+    private TextField pageRangeField; 
+    
+    // private TextField lastPageField = new TextField();
+
     private FileChooser fileChooser;
     private File lastPath;
+    private String fileName;
+    private PDDocument document;
+    private BufferedImage preview;
 
     private boolean isOpen = false;
 
-    private int currentPage;
-    private PDDocument document;
-    private BufferedImage preview;
+    private int lowerRange;
+    private int upperRange;
+
 
     public static void main(String[] args) {
         try {
@@ -77,9 +90,9 @@ public class Main extends Application {
 
         Button prevPageButton = new Button("<");
         prevPageButton.setOnAction(e -> {
-            currentPage--;
-            if (currentPage < 0) {
-                currentPage = document.getNumberOfPages() - 1;
+             currentPage--;
+            if (currentPage < lowerRange) {
+                currentPage = upperRange;
             }
             previewImage();
         });
@@ -87,21 +100,21 @@ public class Main extends Application {
         Button nextPageButton = new Button(">");
         nextPageButton.setOnAction(e -> {
             currentPage++;
-            if (currentPage > document.getNumberOfPages() - 1) {
-                currentPage = 0;
+            if (currentPage > upperRange) {
+                currentPage = lowerRange;
             }
             previewImage();
         });
 
         Button firstPageButton = new Button("<<");
         firstPageButton.setOnAction(e -> {
-            currentPage = 0;
+            currentPage = lowerRange;
             previewImage();
         });
 
         Button lastPageButton = new Button(">>");
         lastPageButton.setOnAction(e -> {
-            currentPage = document.getNumberOfPages() - 1;
+            currentPage = upperRange;
             previewImage();
         });
 
@@ -129,7 +142,6 @@ public class Main extends Application {
 
         Button rotateRightButton = new Button("Rotate right");
         rotateRightButton.setOnAction(e -> {
-
 
             try {
                 rotatePages(-90);
@@ -176,12 +188,12 @@ public class Main extends Application {
         previewButton.setOnAction(e -> {
             String text = currentPageField.getText();
             if (text.equals("")) {
-                currentPage = 0;
+                currentPage = 1;
             } else {
                 try {
                     currentPage = Integer.parseInt(text);
-                    if (currentPage > document.getNumberOfPages() - 1) {
-                        currentPage = document.getNumberOfPages() - 1;
+                    if (currentPage > document.getNumberOfPages()) {
+                        currentPage = document.getNumberOfPages();
                     }
                 } catch (IllegalArgumentException e1) {
                     Alert error = new Alert(Alert.AlertType.ERROR, "Invalid Input", ButtonType.OK);
@@ -195,7 +207,7 @@ public class Main extends Application {
         currentPageField.setOnKeyPressed(e -> {
             if (e.getCode() == KeyCode.ENTER) {
                 try {
-                    currentPage = Integer.parseInt(currentPageField.getText()) - 1;
+                    currentPage = Integer.parseInt(currentPageField.getText());
                 } catch (IllegalArgumentException e1) {
                     Alert error = new Alert(Alert.AlertType.ERROR, "Invalid Input", ButtonType.OK);
                     error.showAndWait();
@@ -211,29 +223,57 @@ public class Main extends Application {
             }
         });
         totalPagesLabel = new Label();
-
+    
+        pageRangeField = new TextField();
+        pageRangeField.setPromptText("range e.g. 1-5");
+        
+        pageRangeField.setPrefWidth(pageRangeField.promptTextProperty().getName().length()*10);
+        pageRangeField.focusedProperty().addListener((obs, oldVal, newVal) -> {
+            try {
+                if (!newVal && isOpen){
+                    //update values when textfield loses focus
+                    String s = pageRangeField.getText();
+                    if (!s.equals("")) {
+                        String[] split = pageRangeField.getText().split("-"); //range i-j
+                        int l = Integer.parseInt(split[0]);
+                        int u = Integer.parseInt(split[1]);
+                        updateRange(l, u);
+                    } else {
+                        updateRange(1, document.getNumberOfPages());
+                    }
+                    previewImage();
+                }
+            } catch(NumberFormatException | IndexOutOfBoundsException a) {
+                Alert error = new Alert(Alert.AlertType.ERROR, "Invalid range", ButtonType.OK);
+                error.showAndWait();
+                updateRange(1, document.getNumberOfPages());
+            }catch (Exception e) {
+                //TODO: handle exception
+            }
+        });
+        
 
         previewPane = new TilePane();
         previewPane.setPrefColumns(1);
         previewPane.setPrefRows(1);
 
-        VBox layout1 = new VBox(15);
+        VBox layout1 = new VBox(16);
 
-        HBox box1 = new HBox(15);
+        HBox box1 = new HBox(16);
         box1.getChildren().addAll(saveButton, openButton);
 
         //layout for navigation
-        HBox box2 = new HBox(15);
+        HBox box2 = new HBox(16);
         box2.getChildren().addAll(firstPageButton, prevPageButton, nextPageButton, lastPageButton);
 
         //layout for manipulation buttons
-        HBox box3 = new HBox(15);
+        HBox box3 = new HBox(16);
         VBox scaleBox = new VBox();
         scaleBox.getChildren().addAll(scaleButton, scaleTextField);
         box3.getChildren().addAll(scaleBox, rotateLeftButton, rotateRightButton, rotate180Button, splitMidHorButton, splitMidVertButton);
 
         HBox box4 = new HBox();
-        box4.getChildren().addAll(currentPageField, totalPagesLabel);
+        box4.getChildren().addAll(currentPageField, totalPagesLabel,new Separator(), pageRangeField);
         VBox prevBox = new VBox();
         prevBox.getChildren().addAll(previewButton, box4);
 
@@ -252,6 +292,12 @@ public class Main extends Application {
 
     }
 
+    private void updateRange(int lower, int upper) {
+        lowerRange = lower;
+        upperRange = upper;
+        currentPage = lower; //set preview to lower bound of the rage
+    }
+
     private void scalePDF() {
         try {
             String scale = scaleTextField.getText();
@@ -264,6 +310,10 @@ public class Main extends Application {
         }
     }
 
+    /**
+     * open a pdf
+     * @throws IOException
+     */
     private void openFile() throws IOException {
 
 //		if (isOpen) {
@@ -273,9 +323,9 @@ public class Main extends Application {
         File file = fileChooser.showOpenDialog(window);
         if (file != null) {
             lastPath = file.getParentFile(); //remember path of the opened file
-            currentPage = 0;
-            String ext = FilenameUtils.getExtension(file.getName());
-
+            fileName = file.getName();
+            String ext = FilenameUtils.getExtension(fileName);
+            currentPage = 1;
             if (!ext.equals("pdf")) {
                 Alert error = new Alert(Alert.AlertType.ERROR, "Wrong file format", ButtonType.OK);
                 error.showAndWait();
@@ -283,12 +333,15 @@ public class Main extends Application {
 
                 try {
                     document = PDDocument.load(file);
+                    lowerRange = 1; //initial page range
+                    upperRange = document.getNumberOfPages();
                     isOpen = true;
                     currentPageField.setText(String.valueOf(currentPage));
-                    window.setTitle("PDFManipulator - " + file.getName());
+                    window.setTitle("PDFManipulator - " + fileName);
                     previewImage();
                 } catch (IOException ex) {
-                    ex.printStackTrace();
+                    Alert error = new Alert(Alert.AlertType.ERROR, "Something went wrong", ButtonType.OK);
+                    error.showAndWait();
                 }
 
             }
@@ -296,6 +349,9 @@ public class Main extends Application {
 
     } // openFile
 
+    /**
+     * save the (modified) pdf
+     */
     private void saveFile() {
 
         if (!isOpen) {
@@ -303,17 +359,20 @@ public class Main extends Application {
             alert.showAndWait();
         } else {
             try {
+                PDDocument doc = document;
+                if (lowerRange != 0 && upperRange != 0) {
+                    doc = getSplitDocument(lowerRange, upperRange);
+                }
                 fileChooser.setTitle("Save as");
                 fileChooser.setInitialDirectory(lastPath);
+                fileChooser.setInitialFileName(fileName);
                 File saveAs = fileChooser.showSaveDialog(window);
                 if (saveAs != null) {
-                    document.save(saveAs);
+                // document.save(saveAs);
+                    doc.save(saveAs);
                 }
-
-
             } catch (IOException ex) {
                 ex.printStackTrace();
-//				JOptionPane.showMessageDialog(null, "Invalid Name", "Error", JOptionPane.ERROR_MESSAGE);
                 Alert error = new Alert(Alert.AlertType.ERROR, "Invalid name", ButtonType.OK);
                 error.showAndWait();
             }
@@ -321,6 +380,23 @@ public class Main extends Application {
 
     } //saveFile
 
+    /**
+     * return a document that only consists of pages i to j (inclusive)
+     * @param i first page index
+     * @param j last page index
+     * @return
+     */
+    private PDDocument getSplitDocument(int i, int j) {
+        PDDocument doc = new PDDocument();
+            for(; i<=j; i++) {
+                doc.addPage(document.getPage(i));
+            }
+        return doc;
+    }
+
+    /**
+     * preview the current pdf page
+     */
     private void previewImage() {
 
         if (!isOpen) {
@@ -330,7 +406,7 @@ public class Main extends Application {
 
             try {
                 PDFRenderer renderer = new PDFRenderer(document);
-                preview = renderer.renderImage(currentPage);
+                preview = renderer.renderImage(currentPage-1); //preview page-1 because variable is 1indexed
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -340,8 +416,8 @@ public class Main extends Application {
 
             previewPane.getChildren().clear();
             previewPane.getChildren().add(new ImageView(prev));
-            currentPageField.setText(String.valueOf((currentPage + 1)));
-            totalPagesLabel.setText(" / " + document.getNumberOfPages());
+            currentPageField.setText(String.valueOf((currentPage)));
+            totalPagesLabel.setText(" / " + upperRange);
 
             window.sizeToScene();
         }
@@ -349,7 +425,11 @@ public class Main extends Application {
 
     } //previewImage
 
-
+    /**
+     * rotate the pages of a pdf document
+     * @param angle
+     * @throws IOException
+     */
     private void rotatePages(double angle) throws IOException {
         if (!isOpen) {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Open file first", ButtonType.OK);
@@ -376,34 +456,37 @@ public class Main extends Application {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Open file first", ButtonType.OK);
             alert.showAndWait();
         } else {
-
             for (int i = 0; i < document.getNumberOfPages(); i++) {
                 PDPage page = document.getPage(i);
                 PDPageContentStream contentStream = new PDPageContentStream(document, page, PDPageContentStream.AppendMode.PREPEND, false, false);
-
                 Matrix s1 = Matrix.getScaleInstance(factor, factor);
-
                 transformPDF(page, contentStream, s1);
             }
-
             previewImage();
         }
 
     }//of scalePages
 
-    private void transformPDF(PDPage page, PDPageContentStream contentStream, Matrix s1) throws IOException {
-        contentStream.transform(s1);
+    /**
+     * Transform the content of a pdf page
+     * @param page 
+     * @param contentStream
+     * @param A transformation matrix
+     * @throws IOException
+     */
+    private void transformPDF(PDPage page, PDPageContentStream contentStream, Matrix A) throws IOException {
+        contentStream.transform(A);
         contentStream.close();
 
         PDRectangle cropBox = page.getCropBox();
-        Rectangle temp = cropBox.transform(s1).getBounds(); //boundaries of result
+        Rectangle temp = cropBox.transform(A).getBounds(); //boundaries of result
         PDRectangle newCropBox = new PDRectangle((float) temp.getX(), (float) temp.getY(), (float) temp.getWidth(), (float) temp.getHeight());
         page.setCropBox(newCropBox);
         page.setMediaBox(newCropBox);
     }
 
 
-    private PDDocument splitHori() throws IOException {
+    private PDDocument splitH() throws IOException {
         PDDocument resultDoc = new PDDocument();
 
         for (int i = 0; i < document.getNumberOfPages(); i++) {
@@ -437,7 +520,7 @@ public class Main extends Application {
     }
 
 
-    private PDDocument splitVert() throws IOException {
+    private PDDocument splitV() throws IOException {
         PDDocument resDoc = new PDDocument();
 
         for (int i = 0; i < document.getNumberOfPages(); i++) {
@@ -467,6 +550,11 @@ public class Main extends Application {
         return resDoc;
     }
 
+    /**
+     * split pages of the pdf
+     * @param where
+     * @throws IOException
+     */
     private void splitPages(String where) throws IOException {
 
         if (!isOpen) {
@@ -475,9 +563,9 @@ public class Main extends Application {
         } else {
             if (where.equals("horizontally")) {
 
-                document = splitHori();
+                document = splitH();
             } else if (where.equals("vertically")) {
-                document = splitVert();
+                document = splitV();
             }
 
         }
