@@ -360,8 +360,8 @@ public class Main extends Application {
         } else {
             try {
                 PDDocument doc = document;
-                if (lowerRange != 1 && upperRange != doc.getNumberOfPages()) {
-                    //user has entered a page range
+                if (lowerRange != 1 || upperRange != doc.getNumberOfPages()) {
+                    //range isnt the entire document
                     doc = getSplitDocument(lowerRange, upperRange);
                 }
                 fileChooser.setTitle("Save as");
