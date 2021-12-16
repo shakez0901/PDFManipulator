@@ -13,6 +13,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyCode;
+import javafx.scene.input.ScrollEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.TilePane;
@@ -56,6 +57,8 @@ public class Main extends Application {
 
     private int lowerRange;
     private int upperRange;
+
+    private Label sizeLabel;
 
 
     public static void main(String[] args) {
@@ -256,6 +259,7 @@ public class Main extends Application {
         previewPane = new TilePane();
         previewPane.setPrefColumns(1);
         previewPane.setPrefRows(1);
+        sizeLabel = new Label();
 
         VBox layout1 = new VBox(16);
 
@@ -274,11 +278,14 @@ public class Main extends Application {
 
         HBox box4 = new HBox();
         box4.getChildren().addAll(currentPageField, totalPagesLabel,new Separator(), pageRangeField);
+        HBox box5 = new HBox();
+        box5.getChildren().addAll(previewPane, sizeLabel);
+
         VBox prevBox = new VBox();
         prevBox.getChildren().addAll(previewButton, box4);
 
         //add everything to the layout
-        layout1.getChildren().addAll(box1, box3, prevBox, previewPane, box2);
+        layout1.getChildren().addAll(box1, box3, prevBox, box5, box2);
 
 
         Scene scene = new Scene(layout1);
@@ -411,6 +418,9 @@ public class Main extends Application {
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
+            double a = preview.getHeight();
+            double b = preview.getWidth();
+            sizeLabel.setText(b +"x"+ a);
             preview = Scalr.resize(preview, Scalr.Method.QUALITY, Scalr.Mode.AUTOMATIC, 600, 600);
             Image prev = SwingFXUtils.toFXImage(preview, null);
 
