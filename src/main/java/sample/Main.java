@@ -360,7 +360,8 @@ public class Main extends Application {
         } else {
             try {
                 PDDocument doc = document;
-                if (lowerRange != 0 && upperRange != 0) {
+                if (lowerRange != 1 && upperRange != doc.getNumberOfPages()) {
+                    //user has entered a page range
                     doc = getSplitDocument(lowerRange, upperRange);
                 }
                 fileChooser.setTitle("Save as");
@@ -388,7 +389,7 @@ public class Main extends Application {
      */
     private PDDocument getSplitDocument(int i, int j) {
         PDDocument doc = new PDDocument();
-            for(; i<=j; i++) {
+            for(; i<j; i++) {
                 doc.addPage(document.getPage(i));
             }
         return doc;
