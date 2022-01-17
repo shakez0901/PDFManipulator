@@ -2,6 +2,8 @@ package sample;
 
 import javafx.application.Application;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -11,10 +13,18 @@ import javafx.scene.control.Separator;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.Dragboard;
+import javafx.scene.input.TransferMode;
 import javafx.scene.input.KeyCode;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.commons.io.FilenameUtils;
@@ -29,6 +39,8 @@ import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+
 import org.imgscalr.Scalr;
 
 public class Main extends Application {
@@ -74,14 +86,50 @@ public class Main extends Application {
 
         window = primaryStage;
         window.setTitle("PDFManipulator");
+        VBox dragTarget = new VBox();
+        dragTarget.setOnDragOver(new EventHandler<DragEvent>() {
 
+            @Override
+            public void handle(DragEvent event) {
+                if (event.getGestureSource() != dragTarget
+                        && event.getDragboard().hasFiles()) {
+                    /* allow for both copying and moving, whatever user chooses */
+                    event.acceptTransferModes(TransferMode.COPY_OR_MOVE);
+                }
+                event.consume();
+            }
+        });
+        dragTarget.setOnDragDropped(new EventHandler<DragEvent>() {
+
+            @Override
+            public void handle(DragEvent event) {
+                Dragboard db = event.getDragboard();
+                boolean success = false;
+                if (db.hasFiles()) {
+                    List<File> files = db.getFiles();
+                    if (files.size() != 1) {
+                        Alert alert = new Alert(Alert.AlertType.WARNING, "Only drag in 1 file",
+                        ButtonType.OK);
+                        alert.showAndWait();
+                    } else {
+                        openFile(files.get(0));
+                    }
+                    success = true;
+                }
+                /* let the source know whether the string was successfully 
+                 * transferred and used */
+                event.setDropCompleted(success);
+
+                event.consume();
+            }
+        });
         Button saveButton = new Button("Save");
         saveButton.setOnAction(e -> saveFile());
 
         Button openButton = new Button("Open");
         openButton.setOnAction(e -> {
             try {
-                openFile();
+                askOpenFile();
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
@@ -258,7 +306,6 @@ public class Main extends Application {
         previewPane.setPrefRows(1);
         sizeLabel = new Label();
 
-        VBox layout1 = new VBox(16);
 
         HBox box1 = new HBox(16);
         box1.getChildren().addAll(saveButton, openButton);
@@ -285,12 +332,11 @@ public class Main extends Application {
         prevBox.getChildren().addAll(previewButton, box4);
 
         // add everything to the layout
-        layout1.getChildren().addAll(box1, box3, prevBox, box5, box2);
-
-        Scene scene = new Scene(layout1);
+        dragTarget.getChildren().addAll(box1, box3, prevBox, box5, box2);
+        
+        Scene scene = new Scene(dragTarget);
         window.setScene(scene);
         window.show();
-
         // match size of textfield with corresponding button
         scaleTextField.setPrefWidth(scaleButton.getWidth());
         currentPageField.setPrefWidth(previewButton.getWidth());
@@ -316,18 +362,20 @@ public class Main extends Application {
         }
     }
 
+    private void askOpenFile() throws IOException {
+        File file = fileChooser.showOpenDialog(window);
+        openFile(file);
+    }
     /**
      * open a pdf
      * 
      * @throws IOException
      */
-    private void openFile() throws IOException {
+    private void openFile(File file) {
 
         // if (isOpen) {
         // document.close();
         // }
-
-        File file = fileChooser.showOpenDialog(window);
         if (file != null) {
             lastPath = file.getParentFile(); // remember path of the opened file
             fileName = file.getName();
