@@ -3,7 +3,6 @@ package sample;
 import javafx.application.Application;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
-import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -17,14 +16,9 @@ import javafx.scene.input.DragEvent;
 import javafx.scene.input.Dragboard;
 import javafx.scene.input.TransferMode;
 import javafx.scene.input.KeyCode;
-import javafx.scene.layout.Background;
-import javafx.scene.layout.BackgroundFill;
-import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.TilePane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.apache.commons.io.FilenameUtils;
@@ -420,14 +414,17 @@ public class Main extends Application {
                 PDDocument doc = document;
                 if (lowerRange != 1 || upperRange != doc.getNumberOfPages()) {
                     // range isnt the entire document
-                    doc = getSplitDocument(lowerRange, upperRange);
+                    doc = getSplitDocument(lowerRange-1, upperRange); //lowerRange-1 because 1indexed
                 }
                 fileChooser.setTitle("Save as");
                 fileChooser.setInitialDirectory(lastPath);
                 fileChooser.setInitialFileName(fileName);
                 File saveAs = fileChooser.showSaveDialog(window);
                 if (saveAs != null) {
-                    // document.save(saveAs);
+                    boolean encrypted = doc.isEncrypted(); 
+                    if (encrypted) {
+                        doc.setAllSecurityToBeRemoved(true); //cannot alter encrypted pdf otherwise
+                    }
                     doc.save(saveAs);
                 }
             } catch (IOException ex) {
@@ -589,12 +586,15 @@ public class Main extends Application {
             resultDoc.importPage(page);
 
         }
+        upperRange = resultDoc.getNumberOfPages();
+        // document = resultDoc;
+        // resultDoc.close();
         return resultDoc;
 
     }
 
     private PDDocument splitV() throws IOException {
-        PDDocument resDoc = new PDDocument();
+        PDDocument resultDoc = new PDDocument();
 
         for (int i = 0; i < document.getNumberOfPages(); i++) {
             PDPage page = document.getPage(i);
@@ -608,7 +608,7 @@ public class Main extends Application {
             cropBox.setUpperRightX((refX + boxWidth) / 2);
             page.setCropBox(cropBox);
             page.setMediaBox(cropBox);
-            resDoc.importPage(page);
+            resultDoc.importPage(page);
 
             // right half
             cropBox = page.getCropBox();
@@ -616,10 +616,13 @@ public class Main extends Application {
             cropBox.setUpperRightX(boxWidth);
             page.setCropBox(cropBox);
             page.setMediaBox(cropBox);
-            resDoc.importPage(page);
+            resultDoc.importPage(page);
 
         }
-        return resDoc;
+        upperRange = resultDoc.getNumberOfPages();
+        // document = resultDoc;
+        // resultDoc.close();
+        return resultDoc;
     }
 
     /**
@@ -629,7 +632,7 @@ public class Main extends Application {
      * @throws IOException
      */
     private void splitPages(String where) throws IOException {
-
+        PDDocument d = null;
         if (!isOpen) {
             Alert alert = new Alert(Alert.AlertType.WARNING, "Open file first",
                     ButtonType.OK);
@@ -637,13 +640,32 @@ public class Main extends Application {
         } else {
             if (where.equals("horizontally")) {
 
-                document = splitH();
+                d = splitH();
             } else if (where.equals("vertically")) {
-                document = splitV();
+                d = splitV();
             }
-
+            setDoc(d);
+            d.close();
+            previewImage(); //update after transforming
         }
 
     } // of splitPages
+
+    public void setDoc(PDDocument d) {
+
+
+        for (PDPage p : document.getPages()) {
+            document.removePage(p);
+        }
+        
+        try {
+            for (PDPage page : d.getPages()) {
+                document.importPage(page);
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+        }
+
+    }
 
 }
